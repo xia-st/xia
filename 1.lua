@@ -1,1 +1,7 @@
-print "hello jiang"
+local a = 0
+for i = 1, 10 do
+	a += i
+end
+
+print(a)
+print(a)
