@@ -3,6 +3,7 @@ action
 actor
 control.lua
 ex_password.lua
+fileList
+folderList
 index
 README
-test
