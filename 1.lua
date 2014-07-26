@@ -4,5 +4,4 @@ for i = 1, 10 do
 end
 
 print(a)
-print(a)
 print("This is only a test statement")
