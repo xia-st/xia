@@ -1,0 +1,150 @@
+local url = "https://raw.githubusercontent.com/xia-st/xia/master/"
+local index = ""
+local folderList = {}
+local fileList = {}
+
+--check whether or not enable the http api
+if not http then
+	printError("xia requires http API")
+	printError("Set http_enable to true in ComputerCraft.cfg")
+	return
+end
+
+
+--init program download some message from Insernet
+local function init()
+	
+	--load index
+	local text -- used to save list message
+	local response = http.get(url .. "index")
+	if not response then return false end
+	index = response.readAll()
+	print("Get index success")
+	response.close()
+	
+	--load file list
+	response = http.get(url .. "fileList")
+	if not response then return false end
+	text = response.readLine()
+	while text ~= EOF do
+		fileList[text] = true
+		text = response.readLine()
+	end
+	print("Get file list success")
+	response.close()
+	
+	--load folder list
+	response = http.get(url .. "folderList")
+	if not response then return false end
+	text = response.readLine()
+	while text ~= EOF do
+		folderList[text] = true
+		text = response.readLine()
+	end
+	print("Get folder list success")
+	response.close()
+	print("Init success")
+	print("Try input \"help\"")
+	return true
+end
+
+if not init() then
+	print("Init error")
+	return
+end
+
+--download program from server
+local function download(name)
+	--check the name
+	if fileList[name] then	 
+		--if the name is a file name, then download it immediately
+		local response = http.get(url .. name)
+		if not response then 
+			print("Can't find " .. name .. " on server")
+			return false --if cannot find the file, return false
+		end	
+		local f = fs.open(name, "w")	--write the code in local file
+		f.write(response.readAll())
+		f.close()
+		response.close()
+		return true
+	elseif folderList[name] then	
+		--if the name is a folder name, in that floder
+		--will have a list file which include file list
+		local response = http.get(url .. name .. "/list")	
+		if not response then
+			print("Can't find " .. name .. " on server")
+			return false 
+		end
+		local text = response.readLine()
+		while text ~= EOF do
+			local f = fs.open(name .. "/" .. text, "w")
+			local response1 = http.get(url .. name .. "/" .. text)
+			if response1 then 
+				f.write(response1.readAll())
+				f.close()
+				response1.close()
+			else
+				f.close()
+				response.close() 
+				return false
+			end
+			text = response.readLine()
+		end
+		response.close()
+		return true
+	else 
+		print(name .. " not in lists")
+		return false
+	end
+end
+
+local function help()
+	print("Usages:")
+	print("index: show the list of files name")
+	print("download <fileName>: download code to local")
+	print("exit: exit this program")
+	print("	the program's author is xia")
+end
+
+while true do
+	local input = ""
+	io.write("#")
+	input = read()
+	local location = string.find(input , " ")
+	if location then 
+		local command = string.sub(input, 1, location - 1)
+		local file = string.sub(input, location + 1)
+		
+		if not file or string.find(file , " ") then
+			print("Invalue file name")
+		end
+		
+		file = shell.resolve(file)
+		if(command == "download") then
+			if(fs.exists(file)) then
+				print(file .. " already exist")
+			else
+				print("\nDownloading...")
+				if download(file) then
+					print("Download success")
+				else
+					print("Download failure")
+				end
+			end
+		end
+	elseif(input == "index") then
+		print("")
+		print(index)
+	elseif(input == "help") then
+		print("")
+		help()
+	elseif(input == "exit") then
+		print("Thanks for using my program")
+		print("--by xia")
+		return
+	else
+		print(input .." is not a command")
+		print("Try input \"help\"")
+	end
+end
