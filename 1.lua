@@ -5,8 +5,4 @@ end
 
 print(a)
 print("This is only a test statement")
-<<<<<<< HEAD
 print("Hello world!\n")
-=======
-print("Hello World\n")
->>>>>>> forktest
