@@ -5,3 +5,4 @@ end
 
 print(a)
 print("This is only a test statement")
+print("Hello world!\n")
