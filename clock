@@ -7,7 +7,7 @@ mon.clear()
 mon.setTextScale(5)
 while true do
 	time = os.time()
-	hour = math.ceil(time)
+	hour = math.ceil(time) - 1
 	minute = math.ceil((time - hour) * 100)
 	mon.setCursorPos(1, 1)
 	mon.write(hour .. ":" .. minute)
