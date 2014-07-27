@@ -11,4 +11,5 @@ while true do
 	minute = math.ceil((time - hour) * 100)
 	mon.setCursorPos(1, 1)
 	mon.write(hour .. ":" .. minute)
+	sleep(1)
 end
