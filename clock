@@ -9,11 +9,12 @@ while true do
 	time = os.time()
 	hour = math.ceil(time) - 1
 	minute = (time - hour) * 100 * 0.6
-	minute = math.ceil(time) - 1
+	minute = math.ceil(minute) - 1
 	mon.setCursorPos(1, 1)
 	if minute < 10 then
 		mon.write(hour .. ":0" .. minute)
 	else
 		mon.write(hour .. ":" .. minute)
+	end
 	sleep(1.66)
 end
