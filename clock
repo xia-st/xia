@@ -1,0 +1,14 @@
+mon = peripheral.wrap("right")
+if not mon then
+	print("Not find monitor!")
+	return
+end
+mon.clear()
+mon.setTextScale(5)
+while true do
+	time = os.time()
+	hour = math.ceil(time)
+	minute = math.ceil((time - hour) * 100)
+	mon.setCursorPos(1, 1)
+	mon.write(hour .. ":" .. minute)
+end
