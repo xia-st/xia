@@ -1,0 +1,38 @@
+digit = turtle.getItemCount(1)
+
+for i = 1, digit do
+	turtle.select(1)
+	if not turtle.place() then
+		print("Please plow the dirt in front of me first")
+	return
+	end
+	turtle.select(16)
+	repeat
+		if turtle.getItemCount(16) == 0 then
+			if not turtle.suckDown() then
+				print("Bone Meal Lack")
+				return
+			end
+		end
+	until not turtle.place()
+	turtle.dig()
+	if turtle.getItemCount(15) > 60 then
+	turtle.turnRight()
+	turtle.turnRight()
+	for i = 1, 15 do
+	 turtle.select(i)
+	 turtle.drop()
+	end
+	turtle.turnRight()
+	turtle.turnRight()
+	end
+end
+
+turtle.turnRight()
+turtle.turnRight()
+for i = 1, 15 do
+	turtle.select(i)
+	turtle.drop()
+end
+turtle.turnRight()
+turtle.turnRight()

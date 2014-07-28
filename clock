@@ -13,7 +13,7 @@ while true do
 		hour = math.ceil(time) - 1
 	end
 	minute = time % 1 * 100 * 0.6
-	if minute = math.ceil(minute) then
+	if minute == math.ceil(minute) then
 		minute = math.ceil(minute)
 	else
 		minute = math.ceil(minute) - 1
