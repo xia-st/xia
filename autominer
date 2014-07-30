@@ -1,0 +1,188 @@
+if not turtle then
+	print("This program only run in turtle")
+	return
+end
+
+local digit = 100
+local slotNum = 16 - 5 + 1
+
+function forward()
+  while not turtle.forward() do
+    turtle.dig()
+  end
+end
+
+function up()
+  while not turtle.up() do
+    turtle.digUp()
+  end
+end
+
+function down()
+  while not turtle.down() do
+    turtle.digDown()
+  end
+end
+
+function back()
+  if not turtle.back() then
+	turtle.turnRight()
+	turtle.turnRight()
+	while not turtle.forward() do
+		turtle.dig()
+	end
+	turtle.turnRight()
+	turtle.turnRight()
+  end
+end
+
+function compare()
+	if turtle.forward() then
+		turtle.back()
+		return true
+	end
+	for i = slotNum, 16 do
+		turtle.select(i)
+		if turtle.compare() then
+			return true
+		end
+	end
+	return false
+end
+
+function compareUp()
+	if turtle.up() then
+		turtle.down()
+		return true
+	end
+	for i = slotNum, 16 do
+		turtle.select(i)
+		if turtle.compareUp() then
+			return true
+		end
+	end
+	return false
+end
+
+function compareDown()
+	if turtle.down() then
+		turtle.up()
+		return true
+	end
+	for i = slotNum, 16 do
+		turtle.select(i)
+		if turtle.compareDown() then
+			return true
+		end
+	end
+	return false
+end
+
+function dfsForward()
+	turtle.turnLeft()
+	if(not compare()) then
+		turtle.dig()
+		forward()
+		dfs()
+		back()
+	end
+	for i = 1, 2 do
+		turtle.turnRight()
+		if(not compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+	end
+	turtle.turnLeft()
+	if(not compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+	if(not compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+function dfsUp()
+	for i = 1, 4 do
+		if(not compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+		turtle.turnRight()
+	end
+	if(not compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+end
+
+function dfsDown()
+	for i = 1, 4 do
+		if(not compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+		turtle.turnRight()
+	end
+	if(not compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+print("start...")
+for i = 1, digit do
+	turtle.dig()
+	forward()
+	turtle.turnLeft()
+	if(not compare()) then
+		turtle.dig()
+		forward()
+		dfsForward()
+		back()
+	end
+	turtle.turnRight()
+	turtle.turnRight()
+	if(not compare()) then
+		turtle.dig()
+		forward()
+		dfsForward()
+		back()
+	end
+	turtle.turnLeft()
+	if(not compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+	if(not compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+turtle.turnRight()
+turtle.turnRight()
+
+for i = 1, digit do
+	forward()
+end
