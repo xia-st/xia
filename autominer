@@ -3,7 +3,7 @@ if not turtle then
 	return
 end
 
-local digit = 100
+local digit = 80
 local slotNum = 16 - 5 + 1
 
 function forward()
@@ -83,7 +83,7 @@ function dfsForward()
 	if(not compare()) then
 		turtle.dig()
 		forward()
-		dfs()
+		dfsForward()
 		back()
 	end
 	for i = 1, 2 do
