@@ -1,0 +1,83 @@
+if not turtle then
+	print("Only turtle can run this program")
+	return
+end
+
+local soltNum = 1
+
+function sowPlant()
+	while turtle.getItemCount(soltNum) == 0 and soltNum <= 16 do
+		soltNum = soltNum + 1
+	end
+	if soltNum > 16 then
+		return false
+	end
+	turtle.select(soltNum)
+	turtle.placeDown()
+end
+
+function forward()
+	while not turtle.forward() do
+		turtle.attack()
+	end
+end
+
+function up()
+	while not turtle.up() do
+		turtle.attackUp()
+	end
+end
+
+function down()
+	while not turtle.down() do
+		turtle.attackDown()
+	end
+end
+
+forward()
+forward()
+up()
+turtle.turnLeft()
+forward()
+forward()
+turtle.turnLeft()
+forward()
+turtle.turnRight()
+
+turtle.select(soltNum)
+sowPlant()
+
+for j = 1, 9 do
+	for i = 1, 8 do
+		forward()
+		sowPlant()
+	end
+	if j % 2 == 1 and j ~= 9 then
+		turtle.turnRight()
+		forward()
+		sowPlant()
+		turtle.turnRight()
+	elseif j % 2 == 0 then
+		turtle.turnLeft()
+		forward()
+		sowPlant()
+		turtle.turnLeft()
+	end
+end
+
+turtle.turnLeft()
+for i = 1, 7 do
+	forward()
+end
+turtle.turnLeft()
+for i = 1, 10 do
+	forward()
+end
+
+down()
+turtle.turnRight()
+forward()
+forward()
+turtle.turnRight()
+turtle.turnRight()
+	
