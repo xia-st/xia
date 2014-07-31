@@ -1,0 +1,58 @@
+digit = 100
+j = digit
+
+function dig(flag)
+  if flag == 0 then
+    if turtle.compare() then
+      print("find diamond!!!")
+      return true
+    else
+      turtle.dig()
+    end
+  else
+    if turtle.compareUp() then
+      print("find diamond!!!")
+       return true
+    else
+      turtle.digUp()
+    end
+  end    
+end
+
+function forward()
+  while not turtle.forward() do
+    turtle.dig()
+  end
+end
+
+print("start...")
+turtle.select(15)
+for i = 1, digit do
+  if dig(0) then
+    j = i - 1
+    break
+  end
+  forward()
+  if dig(1) then
+    j = i - 1
+    break
+  end
+end
+
+print("back...")
+turtle.turnLeft()
+turtle.turnLeft()
+
+turtle.select(16)
+
+for i = 1, j do
+  if i%10 == 1 then
+    turtle.placeUp()
+  end
+  forward()
+end
+turtle.turnLeft()
+turtle.turnLeft()
+
+print("\nThank you for using the program")
+print("By Xia_ST")
