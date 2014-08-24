@@ -1,0 +1,80 @@
+if not turtle then
+	print("Only turtle can run this program")
+	return
+end
+
+h = 4
+w = 5
+
+local soltNum = 1
+
+function changeBlock()
+	while turtle.getItemCount(soltNum) == 0 and soltNum <= 16 do
+		soltNum = soltNum + 1
+	end
+	if soltNum > 8 then
+		return false
+	end
+	turtle.select(soltNum)
+	while not turtle.place() do
+		turtle.dig()
+	end
+end
+
+function forward()
+	while not turtle.forward() do
+		turtle.dig()
+	end
+end
+
+function up()
+	while not turtle.up() do
+		turtle.digUp()
+	end
+end
+
+function down()
+	while not turtle.down() do
+		turtle.digDown()
+	end
+end
+
+turtle.select(soltNum)
+turtle.turnLeft()
+
+for j = 1, w-1 do
+	if j % 2 == 1 then
+		for i = 1, h - 1 do
+			changeBlock()
+			up()
+		end
+		changeBlock()
+	elseif j % 2 == 0 then
+		for i = 1, x - 1 do
+			changeBlock()
+			down()
+		end
+		changeBlock()
+	end
+	turtle.turnRight()
+	forward()
+	turtle.turnLeft()
+end
+
+if w % 2 == 0 then
+	for i = 1, x - 1 do
+		changeBlock()
+		down()
+	end
+	changeBlock()
+else
+	for i = 1, x - 1 do
+		changeBlock()
+		up()
+	end
+	changeBlock()
+	for i = 1, x - 1 do
+		down()
+	end
+end
+turtle.turnLeft()
