@@ -5,7 +5,7 @@ end
 
 local time = os.clock()
 
-local digit = 15
+local digit = 80
 local slotNum = 16 - 5 + 1
 
 local l = vector.new(0, 0, 0)	--initialize the turtle's location for (0, 0, 0)
