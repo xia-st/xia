@@ -5,7 +5,7 @@ end
 
 local time = os.clock()
 
-local digit = 80
+local digit = 15
 local slotNum = 16 - 5 + 1
 
 local l = vector.new(0, 0, 0)	--initialize the turtle's location for (0, 0, 0)
@@ -46,7 +46,9 @@ function forward()
 	l = face + l
 	setMap(l.x, l.y, l.z)
 	while not turtle.forward() do
-		turtle.dig()
+		if not turtle.dig() then
+			turtle.attack()
+		end
 	end
 end
 
@@ -54,7 +56,9 @@ function up()
 	l.y = l.y + 1
 	setMap(l.x, l.y, l.z)
 	while not turtle.up() do
-		turtle.digUp()
+		if not turtle.digUp() then
+			turtle.attackUp()
+		end
 	end
 end
 
@@ -62,7 +66,9 @@ function down()
 	l.y = l.y - 1
 	setMap(l.x, l.y, l.z)
 	while not turtle.down() do
-		turtle.digDown()
+		if not turtle.digDown() then
+			turtle.attackDown()
+		end
 	end
 end
 
@@ -71,10 +77,8 @@ function back()
 	setMap(l.x, l.y, l.z)
 	if not turtle.back() then
 		turtle.turnRight()
-		turnRight()
-		while not turtle.forward() do
-			turtle.dig()
-		end
+		turtle.turnRight()
+		forward()
 		turtle.turnRight()
 		turtle.turnRight()
 	end
