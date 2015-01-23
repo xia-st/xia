@@ -1,0 +1,333 @@
+if not turtle then
+	print("This program only run in turtle")
+	return
+end
+
+local time = os.clock()
+
+local digit = 10
+local item = {
+"minecraft:stone",
+"minecraft:dirt",
+"minecraft:cobblestone",
+"minecraft:flowing_lava",
+"minecraft:lava",
+"minecraft:flowing_water",
+"minecraft:water",
+"minecraft:bedrock",
+"minecraft:obsidian",
+"minecraft:gravel",
+}
+
+local l = vector.new(0, 0, 0)	--initialize the turtle's location for (0, 0, 0)
+local face = vector.new(1, 0, 0)	--turtle's face direction. turtle only can face 4 directions, can't face top or face bottom, so the y direction is unused
+local map = {}
+map[face.x] = {}
+map[face.x][face.y] = {}
+map[face.x][face.y][face.z] = true
+
+function setMap(x, y, z)
+	if not map[x] then
+		map[x] = {}
+		map[x][y] = {}
+		map[x][y][z] = true
+		return
+	elseif not map[x][y] then
+		map[x][y] = {}
+		map[x][y][z] = true
+		return
+	else
+		map[x][y][z] = true
+		return
+	end
+end
+
+function getMap(x, y, z)
+	if not map[x] then
+		return false
+	elseif not map[x][y] then
+		return false
+	elseif not map[x][y][z] then
+		return false
+	end
+	return true
+end
+
+function forward()
+	l = face + l
+	setMap(l.x, l.y, l.z)
+	while not turtle.forward() do
+		if not turtle.dig() then
+			turtle.attack()
+		end
+	end
+end
+
+function up()
+	l.y = l.y + 1
+	setMap(l.x, l.y, l.z)
+	while not turtle.up() do
+		if not turtle.digUp() then
+			turtle.attackUp()
+		end
+	end
+end
+
+function down()
+	l.y = l.y - 1
+	setMap(l.x, l.y, l.z)
+	while not turtle.down() do
+		if not turtle.digDown() then
+			turtle.attackDown()
+		end
+	end
+end
+
+function back()
+	l = l - face
+	setMap(l.x, l.y, l.z)
+	if not turtle.back() then
+		turtle.turnRight()
+		turtle.turnRight()
+		forward()
+		turtle.turnRight()
+		turtle.turnRight()
+	end
+end
+
+function turnLeft()
+	if face.x == 1 and face.z == 0 then
+		face.x, face.z = 0, -1
+	elseif face.x == 0 and face.z == -1 then
+		face.x, face.z = -1, 0
+	elseif face.x == -1 and face.z == 0 then
+		face.x, face.z = 0, 1
+	elseif face.x == 0 and face.z == 1 then
+		face.x, face.z = 1, 0
+	end
+	turtle.turnLeft()
+end
+
+function turnRight()
+	if face.x ==  1 and face.z == 0 then
+		face.x, face.z = 0, 1
+	elseif face.x == 0 and face.z == 1 then
+		face.x, face.z = -1, 0
+	elseif face.x == -1 and face.z == 0 then
+		face.x, face.z = 0, -1
+	elseif face.x == 0 and face.z == -1 then
+		face.x, face.z = 1, 0
+	end
+	turtle.turnRight()
+end
+
+function compare()
+	if getMap(l.x + face.x, l.y + face.y, l.z + face.z) then
+		return false
+	end
+--	if turtle.forward() then
+--		turtle.back()
+--		setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+--		return false
+--	end
+	--[[for i = slotNum, 16 do
+		turtle.select(i)
+		if turtle.compare() then
+			setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+			return false
+		end
+	end
+	]]--
+	local success, data = turtle.inspect()
+	if success then
+		print(data.name)
+		for i, v in ipairs(item) do
+			if data.name == v then
+				setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+				return false
+			end
+		end
+	else
+		setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+		return false
+	end
+	return true
+end
+
+function compareUp()
+	if getMap(l.x, l.y + 1, l.z) then
+		return false
+	end
+--	if turtle.up() then
+--		setMap(l.x, l.y + 1, l.z)
+--		turtle.down()
+--		return false
+--	end
+--	for i = slotNum, 16 do
+--		turtle.select(i)
+--		if turtle.compareUp() then
+--			setMap(l.x, l.y + 1, l.z)
+--			return false
+--		end
+--	end
+    local success, data = turtle.inspectUp()
+    if success then
+        for i, v in ipairs(item) do
+            if data.name == v then
+                setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+                return false
+            end
+        end
+    else
+        setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+        return false
+    end 
+	return true
+end
+
+function compareDown()
+	if getMap(l.x, l.y - 1, l.z) then
+		return false
+	end
+--	if turtle.down() then
+--		turtle.up()
+--		setMap(l.x, l.y - 1, l.z)
+--		return false
+--	end
+--	for i = slotNum, 16 do
+--		turtle.select(i)
+--		if turtle.compareDown() then
+--			setMap(l.x, l.y - 1, l.z)
+--			return false
+--		end
+--	end
+    local success, data = turtle.inspectDown()
+    if success then
+        for i, v in ipairs(item) do
+            if data.name == v then
+                setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+                return false
+            end
+        end
+    else
+        setMap(l.x + face.x, l.y + face.y, l.z + face.z)
+        return false
+    end 
+
+	return true
+end
+
+function dfsForward()
+	turnLeft()
+	if(compare()) then
+		turtle.dig()
+		forward()
+		dfsForward()
+		back()
+	end
+	for i = 1, 2 do
+		turnRight()
+		if(compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+	end
+	turnLeft()
+	if(compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+	if(compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+function dfsUp()
+	for i = 1, 4 do
+		if(compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+		turnRight()
+	end
+	if(compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+end
+
+function dfsDown()
+	for i = 1, 4 do
+		if(compare()) then
+			turtle.dig()
+			forward()
+			dfsForward()
+			back()
+		end
+		turnRight()
+	end
+	if(compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+print("start...")
+for i = 1, digit do
+	turtle.dig()
+	forward()
+	turnLeft()
+	if(compare()) then
+		turtle.dig()
+		forward()
+		dfsForward()
+		back()
+	end
+	turnRight()
+	turnRight()
+	if(compare()) then
+		turtle.dig()
+		forward()
+		dfsForward()
+		back()
+	end
+	turnLeft()
+	if(compareUp()) then
+		turtle.digUp()
+		up()
+		dfsUp()
+		down()
+	end
+	if(compareDown()) then
+		turtle.digDown()
+		down()
+		dfsDown()
+		up()
+	end
+end
+
+turtle.turnRight()
+turtle.turnRight()
+
+for i = 1, digit do
+	forward()
+end
+
+turtle.turnRight()
+turtle.turnRight()
+
+print(os.clock() - time)
+
